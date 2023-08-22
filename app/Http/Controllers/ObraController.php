@@ -6,7 +6,6 @@ use App\Models\Pesquisador;
 use App\Models\Obra;
 use App\Models\Instituicao;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -27,8 +26,7 @@ class ObraController extends Controller
 
     public function store(Request $request)
     {
-
-        $rules = [
+        $request->validate([
             'titulo' => 'required',
             'data_publicacao' => 'required|date',
             'instituicao_id.value' => 'required|exists:instituicoes,id',
@@ -38,30 +36,40 @@ class ObraController extends Controller
             'lingua' => 'required',
             'licenca' => 'required',
             'pesquisadores.*.value' => 'required',
-            'thumb' => 'nullable|mimes:jpeg,png',
-            'arquivo' => 'nullable|mimes:pdf',
-        ];
-
-        $messages = [
+            'thumb' => 'nullable',
+            'arquivo' => 'nullable',
+        ], [
             'instituicao_id.value.required' => 'O campo instituição é obrigatório.',
             'required' => 'O campo :attribute é obrigatório.',
             'thumb.mimes' => 'O campo :attribute deve ser uma imagem JPEG ou PNG.',
             'arquivo.mimes' => 'O campo :attribute deve ser um arquivo PDF.',
-        ];
+        ]);
 
-        $validated = $request->validate($rules, $messages);
+        // validate if the file is an image
+        if ($request->file('thumb')) {
+            $request->validate([
+                'thumb' => 'mimes:jpeg,png',
+            ]);
+        }
+
+        // validate if the file is a pdf
+        if ($request->file('arquivo')) {
+            $request->validate([
+                'arquivo' => 'mimes:pdf',
+            ]);
+        }
 
         $obra = Obra::create([
-            'titulo' => $validated['titulo'],
-            'data_publicacao' => $validated['data_publicacao'],
-            'instituicao_id' => $validated['instituicao_id']['value'] ?? null,
+            'titulo' => $request['titulo'],
+            'data_publicacao' => $request['data_publicacao'],
+            'instituicao_id' => $request['instituicao_id']['value'] ?? null,
             'arquivo' => $request->file('arquivo') ? $request->file('arquivo')->store('obras') : null,
             'thumb' => $request->file('thumb') ? $request->file('thumb')->store('thumbs') : null,
-            'nota' => $validated['nota'],
-            'assunto' => $validated['assunto'],
-            'tipo' => $validated['tipo'],
-            'lingua' => $validated['lingua'],
-            'licenca' => $validated['licenca'],
+            'nota' => $request['nota'],
+            'assunto' => $request['assunto'],
+            'tipo' => $request['tipo'],
+            'lingua' => $request['lingua'],
+            'licenca' => $request['licenca'],
         ]);
 
         $pesquisadoresIds = array_map(function ($pesquisador) {
@@ -77,14 +85,14 @@ class ObraController extends Controller
 
         $obra->pesquisadores()->attach($data);
 
-        return Redirect::back()->with([
+        return redirect()->back()->with([
             'response' => $obra
         ]);
     }
 
     public function update(Request $request, $id)
     {
-        $rules = [
+        $request->validate([
             'titulo' => 'required',
             'data_publicacao' => 'required|date',
             'instituicao_id.value' => 'required|exists:instituicoes,id',
@@ -94,32 +102,42 @@ class ObraController extends Controller
             'lingua' => 'required',
             'licenca' => 'required',
             'pesquisadores.*.value' => 'required',
-            'thumb' => 'nullable|mimes:jpeg,png',
-            'arquivo' => 'nullable|mimes:pdf',
-        ];
-
-        $messages = [
+            'thumb' => 'nullable',
+            'arquivo' => 'nullable',
+        ], [
             'instituicao_id.value.required' => 'O campo instituição é obrigatório.',
             'required' => 'O campo :attribute é obrigatório.',
             'thumb.required' => 'O campo :attribute é obrigatório.',
             'thumb.mimes' => 'O campo :attribute deve ser uma imagem JPEG ou PNG.',
             'arquivo.mimes' => 'O campo :attribute deve ser um arquivo PDF.',
-        ];
+        ]);
 
-        $validated = $request->validate($rules, $messages);
+        // validate if the file is an image
+        if ($request->file('thumb')) {
+            $request->validate([
+                'thumb' => 'mimes:jpeg,png',
+            ]);
+        }
+
+        // validate if the file is a pdf
+        if ($request->file('arquivo')) {
+            $request->validate([
+                'arquivo' => 'mimes:pdf',
+            ]);
+        }
 
         $obra = Obra::find($id);
 
-        $obra->titulo = $validated['titulo'];
-        $obra->data_publicacao = $validated['data_publicacao'];
-        $obra->instituicao_id = $validated['instituicao_id']['value'] ?? null;
+        $obra->titulo = $request['titulo'];
+        $obra->data_publicacao = $request['data_publicacao'];
+        $obra->instituicao_id = $request['instituicao_id']['value'] ?? null;
         $obra->arquivo = $request->file('arquivo') ? $request->file('arquivo')->store('obras') : $obra->arquivo;
         $obra->thumb = $request->file('thumb') ? $request->file('thumb')->store('thumbs') : $obra->thumb;
-        $obra->nota = $validated['nota'];
-        $obra->assunto = $validated['assunto'];
-        $obra->tipo = $validated['tipo'];
-        $obra->lingua = $validated['lingua'];
-        $obra->licenca = $validated['licenca'];
+        $obra->nota = $request['nota'];
+        $obra->assunto = $request['assunto'];
+        $obra->tipo = $request['tipo'];
+        $obra->lingua = $request['lingua'];
+        $obra->licenca = $request['licenca'];
 
         $pesquisadoresIds = array_map(function ($pesquisador) {
             return $pesquisador['value'];
@@ -136,7 +154,7 @@ class ObraController extends Controller
 
         $obra->save();
 
-        return Redirect::back()->with([
+        return redirect()->back()->with([
             'response' => $obra
         ]);
     }
@@ -161,7 +179,7 @@ class ObraController extends Controller
 
         $obra->delete();
 
-        return Redirect::back()->with([
+        return redirect()->back()->with([
             'response' => $obra
         ]);
     }
@@ -177,7 +195,7 @@ class ObraController extends Controller
             $obra->save();
         }
 
-        return Redirect::back()->with([
+        return redirect()->back()->with([
             'response' => $obra
         ]);
     }
@@ -193,7 +211,7 @@ class ObraController extends Controller
             $obra->save();
         }
 
-        return Redirect::back()->with([
+        return redirect()->back()->with([
             'response' => $obra
         ]);
     }

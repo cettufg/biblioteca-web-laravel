@@ -248,6 +248,24 @@
                                     v-model="form.tipo"
                                 />
                             </div>
+
+                            <div class="tw-mt-5" v-if="form.pesquisadores.length > 0">
+                                <span class="tw-text-xl">Pesquisadores</span>
+                                <q-list bordered separator class="tw-mt-3">
+                                    <q-item v-for="(pesquisador, index) in form.pesquisadores" :key="index">
+                                        <q-item-section>{{ index + 1 }} - {{ pesquisador.nome }}</q-item-section>
+                                    </q-item>
+                                </q-list>
+                            </div>
+
+                            <div class="tw-mt-5" v-if="form.obras.length > 0">
+                                <span class="tw-text-xl">Obras</span>
+                                <q-list bordered separator class="tw-mt-3">
+                                    <q-item v-for="(obra, index) in form.obras" :key="index">
+                                        <q-item-section>{{ index + 1 }} - {{ obra.titulo }}</q-item-section>
+                                    </q-item>
+                                </q-list>
+                            </div>
                         </div>
                     </q-card-section>
 
@@ -317,6 +335,7 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import { ref } from 'vue';
 import { Head, useForm } from '@inertiajs/vue3';
+import { Notify } from 'quasar';
 
 const props = defineProps({
     instituicoes: {
@@ -326,10 +345,11 @@ const props = defineProps({
 })
 
 const columns = [
-  { name: 'nome_fantasia', align: 'center', label: 'Nome Fantasia', field: 'nome_fantasia', sortable: true },
-  { name: 'cnpj', align: 'center', label: 'CNPJ', field: 'cnpj', sortable: true },
-  { name: 'tipo', align: 'center', label: 'Tipo', field: 'tipo', sortable: true },
-  { name: 'actions', align: 'center', label: 'Ações', field: 'actions', sortable: false },
+    { name: 'razao_social', align: 'center', label: 'Razão Social', field: 'razao_social', sortable: true },
+    { name: 'nome_fantasia', align: 'center', label: 'Nome Fantasia', field: 'nome_fantasia', sortable: true },
+    { name: 'cnpj', align: 'center', label: 'CNPJ', field: 'cnpj', sortable: true },
+    { name: 'tipo', align: 'center', label: 'Tipo', field: 'tipo', sortable: true },
+    { name: 'actions', align: 'center', label: 'Ações', field: 'actions', sortable: false },
 ];
 const initialPagination = ref({
     sortBy: 'desc',
@@ -373,6 +393,15 @@ function openModalAction(type, data = []){
         form.nome_fantasia = data.nome_fantasia;
         form.cnpj = data.cnpj;
         form.tipo = data.tipo;
+
+        data.pesquisadores.forEach((pesquisador) => {
+            form.pesquisadores.push(pesquisador);
+        });
+
+        data.obras.forEach((obra) => {
+            form.obras.push(obra);
+        });
+
         openModalDetails.value = true;
     }else if(type == 4){
         form.id = data.id;
@@ -387,8 +416,18 @@ function storeData(){
             openModal.value = false;
             form.reset();
             rows.value = response.props.instituicoes;
+
+            Notify.create({
+                message: 'Dados cadastrados com sucesso!',
+                color: 'positive',
+                timeout: 1000
+            });
         }, onError: (error) => {
-            console.log(error);
+            Notify.create({
+                message: 'Erro ao cadastrar dados!',
+                color: 'negative',
+                timeout: 1000
+            });
         }
     });
 }
@@ -400,6 +439,19 @@ function saveData(){
             openModal.value = false;
             form.reset();
             rows.value = response.props.instituicoes;
+
+            Notify.create({
+                message: 'Dados atualizados com sucesso!',
+                color: 'positive',
+                timeout: 1000
+            });
+        },
+        onError: (error) => {
+            Notify.create({
+                message: 'Erro ao atualizar dados!',
+                color: 'negative',
+                timeout: 1000
+            });
         }
     });
 }
@@ -411,6 +463,19 @@ function destroyData(){
             openModalDelete.value = false;
             form.reset();
             rows.value = response.props.instituicoes;
+
+            Notify.create({
+                message: 'Dados excluídos com sucesso!',
+                color: 'positive',
+                timeout: 1000
+            });
+        },
+        onError: (error) => {
+            Notify.create({
+                message: 'Erro ao excluir dados!',
+                color: 'negative',
+                timeout: 1000
+            });
         }
     });
 }

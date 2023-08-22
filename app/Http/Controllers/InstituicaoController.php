@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Instituicao;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class InstituicaoController extends Controller
@@ -66,9 +65,25 @@ class InstituicaoController extends Controller
     {
         $instituicao = Instituicao::find($id);
 
+        // remove relation for pesquisadores
+        $pesquisadores = $instituicao->pesquisadores()->get();
+
+        foreach($pesquisadores as $pesquisador) {
+            $pesquisador->instituicao_id = null;
+            $pesquisador->save();
+        }
+
+        // remove relation for obras
+        $obras = $instituicao->obras()->get();
+
+        foreach($obras as $obra) {
+            $obra->instituicao_id = null;
+            $obra->save();
+        }
+
         $instituicao->delete();
 
-        return Redirect::back()->with([
+        return redirect()->back()->with([
             'response' => $instituicao
         ]);
     }

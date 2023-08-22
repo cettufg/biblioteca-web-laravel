@@ -1,14 +1,14 @@
 <template>
     <AuthenticatedLayout>
-        <Head title="Instituições" />
+        <Head title="Pesquisadores" />
         <div class="tw-p-5 md:tw-p-10">
             <div class="tw-flex tw-items-center tw-justify-between tw-space-x-4">
-                <h1 class="tw-text-2xl tw-font-bold tw-text-careful-blue-80">Instituições</h1>
+                <h1 class="tw-text-2xl tw-font-bold tw-text-careful-blue-80">Pesquisadores</h1>
                 <PrimaryButton
                     @click="openModalAction(1)"
                     background="positive"
                     class="tw-px-4 tw-py-2"
-                    text="Adicionar Instituição"
+                    text="Adicionar Pesquisador"
                     icon="material-symbols:add-circle-outline"
                 />
             </div>
@@ -30,7 +30,7 @@
                                 {{ props.row.data_nascimento ? props.row.data_nascimento.split('-').reverse().join('/') : '' }}
                             </div>
                             <div v-else-if="props.col.name == 'instituicao_id'">
-                                {{ props.row.instituicao.nome_fantasia }}
+                                {{ props.row.instituicao ? props.row.instituicao.nome_fantasia : '' }}
                             </div>
                             <div v-else-if="props.col.name == 'actions'">
                                 <div class="tw-inline-flex tw-items-center tw-rounded-md tw-shadow-sm tw-gap-2">
@@ -73,7 +73,7 @@
                     </template>
 
                     <template v-slot:top-right>
-                        <q-input v-model="filter" @update:model-value="val => filtrarTabela(val, ['id', 'nome_fantasia', 'cnpj', 'tipo'], props.instituicoes)" outlined type="search" placeholder="Pesquisar">
+                        <q-input v-model="filter" @update:model-value="val => filtrarTabela(val, ['nome', 'data_nascimento', 'universidade', 'instituicao.razao_social'], props.pesquisadores)" outlined type="search" placeholder="Pesquisar">
                             <template v-slot:append>
                                 <q-icon name="search" />
                             </template>
@@ -280,7 +280,7 @@
                                 <InputLabel
                                     value="Instituição"
                                 />
-                                <span class="tw-text-lg">{{ form.instituicao_id }}</span>
+                                <span class="tw-text-lg">{{ form.instituicao_id.label }}</span>
                             </div>
 
                             <div class="tw-mt-5" v-if="form.obras.length > 0">
@@ -452,6 +452,13 @@ function openModalAction(type, data = []){
         } else {
             form.instituicao_id = null;
         }
+
+        data.obras.forEach((obra) => {
+            form.obras.push({
+                id: obra.id,
+                titulo: obra.titulo
+            });
+        });
         openModalDetails.value = true;
     }else if(type == 4){
         form.id = data.id;
@@ -466,8 +473,18 @@ function storeData(){
             openModal.value = false;
             form.reset();
             rows.value = response.props.pesquisadores;
+
+            Notify.create({
+                message: 'Dados cadastrados com sucesso!',
+                type: 'positive',
+                timeout: 1000
+            });
         }, onError: (error) => {
-            console.log(error);
+            Notify.create({
+                message: 'Erro ao cadastrar dados',
+                type: 'negative',
+                timeout: 1000
+            });
         }
     });
 }
@@ -479,6 +496,19 @@ function saveData(){
             openModal.value = false;
             form.reset();
             rows.value = response.props.pesquisadores;
+
+            Notify.create({
+                message: 'Dados atualizados com sucesso!',
+                type: 'positive',
+                timeout: 1000
+            });
+        },
+        onError: (error) => {
+            Notify.create({
+                message: 'Erro ao atualizar dados',
+                type: 'negative',
+                timeout: 1000
+            });
         }
     });
 }
@@ -490,6 +520,19 @@ function destroyData(){
             openModalDelete.value = false;
             form.reset();
             rows.value = response.props.pesquisadores;
+
+            Notify.create({
+                message: 'Dados excluídos com sucesso!',
+                type: 'positive',
+                timeout: 1000
+            });
+        },
+        onError: (error) => {
+            Notify.create({
+                message: 'Erro ao excluir dados',
+                type: 'negative',
+                timeout: 1000
+            });
         }
     });
 }

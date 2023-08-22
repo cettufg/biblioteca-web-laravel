@@ -6,7 +6,6 @@ use App\Models\Pesquisador;
 use App\Models\Obra;
 use App\Models\Instituicao;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class PesquisadorController extends Controller
@@ -48,7 +47,7 @@ class PesquisadorController extends Controller
             'instituicao_id' => $request->input('instituicao_id.value'),
         ]);
 
-        return Redirect::back()->with([
+        return redirect()->back()->with([
             'response' => $pesquisador
         ]);
     }
@@ -78,7 +77,7 @@ class PesquisadorController extends Controller
 
         $pesquisador->save();
 
-        return Redirect::back()->with([
+        return redirect()->back()->with([
             'response' => $pesquisador
         ]);
     }
@@ -87,9 +86,16 @@ class PesquisadorController extends Controller
     {
         $pesquisador = Pesquisador::find($id);
 
+        // remove relation for obras
+        $obras = $pesquisador->obras()->get();
+
+        foreach($obras as $obra) {
+            $obra->pesquisadores()->detach($pesquisador->id);
+        }
+
         $pesquisador->delete();
 
-        return Redirect::back()->with([
+        return redirect()->back()->with([
             'response' => $pesquisador
         ]);
     }
