@@ -2,45 +2,21 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-    prefix: 'tw-',
     important: true,
+    prefix: 'tw-',
     content: [
         './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/js/**/*.vue',
     ],
-
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Nunito', ...defaultTheme.fontFamily.sans],
+                poppins: ['Poppins', ...defaultTheme.fontFamily.sans],
             },
             colors: {
-                primary: {
-                    DEFAULT: '#07102a'
-                },
-                secondary: {
-                    DEFAULT: '#e3ecf1'
-                },
-                accent: {
-                    DEFAULT: '#9C27B0'
-                },
-                dark: {
-                    DEFAULT: '#1D1D1D'
-                },
-                positive: {
-                    DEFAULT: '#16aa1b'
-                },
-                negative: {
-                    DEFAULT: '#ff0000'
-                },
-                info: {
-                    DEFAULT: '#0085ff'
-                },
-                warning: {
-                    DEFAULT: '#f3b900'
-                },
                 'corporate-black': {
                     DEFAULT: '#A3ABBD',
                     10: '#FAFBFC',
@@ -55,7 +31,7 @@ module.exports = {
                     100: '#322550',
                     110: '#1F0E3D',
                   },
-                  green: {
+                green: {
                     DEFAULT: '#33DF6B',
                     10: '#DCFFE6',
                     20: '#C3FED4',
@@ -68,7 +44,7 @@ module.exports = {
                     90: '#26554D',
                     100: '#1C3F39',
                   },
-                  'careful-blue': {
+                'careful-blue': {
                     DEFAULT: '#0053ED',
                     10: '#EEF5FF',
                     20: '#DFECFE',
@@ -81,7 +57,7 @@ module.exports = {
                     90: '#00077B',
                     100: '#111448',
                   },
-                  'immersive-red': {
+                'immersive-red': {
                     DEFAULT: '#FD6969',
                     50: '#FFECEC',
                     100: '#FFDFDF',
@@ -94,7 +70,7 @@ module.exports = {
                     800: '#AF3445',
                     900: '#612041',
                   },
-                  orange: {
+                orange: {
                     DEFAULT: '#FF8212',
                     50: '#FFF0E3',
                     100: '#FFE2C9',
@@ -106,8 +82,8 @@ module.exports = {
                     700: '#CF4E09',
                     800: '#B63404',
                     900: '#9E1A00',
-                  },
-                  yellow: {
+                },
+                yellow: {
                     DEFAULT: '#E7A80D',
                     50: '#FFF5D6',
                     100: '#FEEBAF',
@@ -119,10 +95,57 @@ module.exports = {
                     700: '#BF7800',
                     800: '#9F5600',
                     900: '#7F3300',
-                  },
+                },
+                'primary': {
+                    DEFAULT: '#F7FAFF',
+                    1: '#6366F1',
+                    2: '#2629AC',
+                    3: '#16187D',
+                },
+                'secondary': {
+                    DEFAULT: '#DBDBDB',
+                    1: '#636479',
+                    2: '#2E2F3C',
+                },
+                'tertiary': {
+                    DEFAULT: '#FF6584',
+                    1: '#F1345A',
+                    2: '#C62041',
+                    3: '#AC1B38',
+                },
+                'white': {
+                    DEFAULT: '#FFFFFF',
+                    1: '#F7F8FB',
+                    2: '#E8EBF1',
+                    3: '#DCE0E8',
+                    4: '#B2B9C5',
+                },
+                'black': {
+                    DEFAULT: '#000000',
+                    1: '#47545E',
+                    2: '#333B41',
+                },
+                'danger': {
+                    DEFAULT: '#FDE3E3',
+                    1: '#5B1713',
+                },
+                'success': {
+                    DEFAULT: '#E3FDE4',
+                    1: '#135B39',
+                },
+                'alert': {
+                    DEFAULT: '#FDFAE3',
+                    1: '#5B5813',
+                },
+                'info': {
+                    DEFAULT: '#E3F2FD',
+                    1: '#13235B',
+                },
             }
-        }
+        },
     },
 
-    plugins: [require('@tailwindcss/forms')],
+    plugins: [
+        require('@tailwindcss/forms'),
+    ],
 };

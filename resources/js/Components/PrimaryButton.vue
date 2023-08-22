@@ -129,29 +129,33 @@ const background = computed(() => {
     }else if(props.background == 'none' && props.outlined == true){
         return 'tw-text-gray-500 hover:tw-text-gray-700 focus:tw-text-gray-700 active:tw-text-gray-700 tw-border tw-border-gray-300 hover:tw-bg-gray-50 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-offset-2 focus:tw-ring-indigo-500';
     }else if(props.background == 'positive' && props.outlined == false){
-        return 'tw-text-white tw-bg-positive hover:tw-bg-positive_hover focus:tw-bg-positive_hover active:tw-bg-positive_hover';
+        return 'tw-text-white tw-bg-green-70 hover:tw-bg-green-80 focus:tw-bg-green-80 active:tw-bg-green-80';
     }else if(props.background == 'positive' && props.outlined == true){
-        return 'tw-text-positive tw-border tw-border-positive hover:tw-bg-positive_hover focus:tw-bg-positive_hover active:tw-bg-positive_hover hover:tw-text-white focus:tw-text-white active:tw-text-white';
+        return 'tw-text-green-80 tw-border tw-border-green-80 hover:tw-bg-green-80 focus:tw-bg-green-80 active:tw-bg-green-80 hover:tw-text-white focus:tw-text-white active:tw-text-white';
     }else if(props.background == 'negative' && props.outlined == false){
-        return 'tw-text-white tw-bg-negative hover:tw-bg-negative_hover focus:tw-bg-negative_hover active:tw-bg-negative_hover';
+        return 'tw-text-white tw-bg-immersive-red-700 hover:tw-bg-immersive-red-900 focus:tw-bg-immersive-red-900 active:tw-bg-immersive-red-900';
     }else if(props.background == 'negative' && props.outlined == true){
-        return 'tw-text-negative tw-border tw-border-negative hover:tw-bg-negative_hover focus:tw-bg-negative_hover active:tw-bg-negative_hover hover:tw-text-white focus:tw-text-white active:tw-text-white';
+        return 'tw-text-immersive-red-700 tw-border tw-border-immersive-red-700 hover:tw-bg-immersive-red-900 focus:tw-bg-immersive-red-900 active:tw-bg-immersive-red-900 hover:tw-text-white focus:tw-text-white active:tw-text-white';
     }else if(props.background == 'info' && props.outlined == false){
-        return 'tw-text-white tw-bg-info hover:tw-bg-info_hover focus:tw-bg-info_hover active:tw-bg-info_hover';
+        return 'tw-text-white tw-bg-careful-blue-60 hover:tw-bg-careful-blue-80 focus:tw-bg-careful-blue-80 active:tw-bg-careful-blue-80';
     }else if(props.background == 'info' && props.outlined == true){
-        return 'tw-text-info tw-border tw-border-info hover:tw-bg-info_hover focus:tw-bg-info_hover active:tw-bg-info_hover hover:tw-text-white focus:tw-text-white active:tw-text-white';
+        return 'tw-text-careful-blue-60 tw-border tw-border-careful-blue-60 hover:tw-bg-careful-blue-80 focus:tw-bg-careful-blue-80 active:tw-bg-careful-blue-80 hover:tw-text-white focus:tw-text-white active:tw-text-white';
     }else if(props.background == 'warning' && props.outlined == false){
-        return 'tw-text-white tw-bg-warning hover:tw-bg-warning_hover focus:tw-bg-warning_hover active:tw-bg-warning_hover';
+        return 'tw-text-white tw-bg-orange-500 hover:tw-bg-orange-700 focus:tw-bg-orange-700 active:tw-bg-orange-700';
     }else if(props.background == 'warning' && props.outlined == true){
-        return 'tw-text-warning tw-border tw-border-warning hover:tw-bg-warning_hover focus:tw-bg-warning_hover active:tw-bg-warning_hover hover:tw-text-white focus:tw-text-white active:tw-text-white';
+        return 'tw-text-orange-500 tw-border tw-border-orange-500 hover:tw-bg-orange-700 focus:tw-bg-orange-700 active:tw-bg-orange-700 hover:tw-text-white focus:tw-text-white active:tw-text-white';
     }else if(props.background == 'primary' && props.outlined == false){
-        return 'tw-text-white tw-bg-primary hover:tw-bg-primary_hover focus:tw-bg-primary_hover active:tw-bg-primary_hover';
+        return 'tw-text-white tw-bg-primary-1 hover:tw-bg-primary-2 focus:tw-bg-primary-2 active:tw-bg-primary-2';
     }else if(props.background == 'primary' && props.outlined == true){
-        return 'tw-text-primary tw-border tw-border-primary hover:tw-bg-primary_hover focus:tw-bg-primary_hover active:tw-bg-primary_hover hover:tw-text-white focus:tw-text-white active:tw-text-white';
+        return 'tw-text-primary-1 tw-border tw-border-primary-1 hover:tw-bg-primary-2 focus:tw-bg-primary-2 active:tw-bg-primary-2 hover:tw-text-white focus:tw-text-white active:tw-text-white';
     }else if(props.background == 'secondary' && props.outlined == false){
-        return 'tw-text-white tw-bg-secondary hover:tw-bg-secondary_hover focus:tw-bg-secondary_hover active:tw-bg-secondary_hover';
+        return 'tw-text-white tw-bg-secondary hover:tw-bg-secondary-1 focus:tw-bg-secondary-1 active:tw-bg-secondary_hover';
     }else if(props.background == 'secondary' && props.outlined == true){
-        return 'tw-text-secondary tw-border tw-border-secondary hover:tw-bg-secondary_hover focus:tw-bg-secondary_hover active:tw-bg-secondary_hover hover:tw-text-white focus:tw-text-white active:tw-text-white';
+        return 'tw-text-secondary tw-border tw-border-secondary hover:tw-bg-secondary-1 focus:tw-bg-secondary-1 active:tw-bg-secondary-1 hover:tw-text-white focus:tw-text-white active:tw-text-white';
+    }else if(props.background == 'white' && props.outlined == false){
+        return 'tw-text-black tw-bg-white hover:tw-bg-white-3 focus:tw-bg-white-3 active:tw-bg-white-3';
+    }else if(props.background == 'white' && props.outlined == true){
+        return 'tw-text-white tw-border tw-border-white';
     }
 });
 </script>

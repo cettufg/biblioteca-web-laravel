@@ -82,8 +82,8 @@
         <div class="tw-w-full tw-flex tw-items-center tw-justify-center tw-mb-7" :class="{
             'tw-border-t tw-pt-7 tw-border-corporate-black-10': !store.open,
         }">
-            <img v-if="store.open" src="@/Images/logotipo_cett.png" class="tw-w-24" alt="Logo CETT" />
-            <img v-else src="@/Images/icone_cett.svg" class="tw-w-full tw-px-4" alt="Icone CETT" />
+            <img v-if="store.open" src="@/Images/logo_cett.svg" class="tw-w-24" alt="Logo CETT" />
+            <img v-else src="@/Images/icon_cett.svg" class="tw-w-full tw-px-4" alt="Icone CETT" />
         </div>
     </div>
 </template>
@@ -105,6 +105,33 @@ const itemsMenu = [
             ref: 'iconoir:home-simple-door'
         },
         name: 'Início',
+        can: true,
+    },
+    {
+        route: 'instituicao.index',
+        icon: {
+            type: 'icon',
+            ref: 'mdi:company'
+        },
+        name: 'Instituições',
+        can: true,
+    },
+    {
+        route: 'pesquisador.index',
+        icon: {
+            type: 'icon',
+            ref: 'ri:survey-line'
+        },
+        name: 'Pesquisadores',
+        can: true,
+    },
+    {
+        route: 'obra.index',
+        icon: {
+            type: 'icon',
+            ref: 'raphael:books'
+        },
+        name: 'Obras',
         can: true,
     }
 ];

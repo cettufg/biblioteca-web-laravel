@@ -1,3 +1,3 @@
 <template>
-    <img src="@/Images/logotipo.png" alt="logotipo">
+    <img src="@/Images/logo_cett.svg" alt="logotipo">
 </template>

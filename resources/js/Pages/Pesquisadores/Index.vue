@@ -1,70 +1,94 @@
 <template>
     <AuthenticatedLayout>
-        <div class="tw-py-12">
-            <div class="tw-max-w-7xl tw-mx-auto sm:tw-px-6 lg:tw-px-8">
-                <div class="tw-bg-white tw-overflow-hidden tw-shadow-sm sm:tw-rounded-lg">
-                    <q-table
-                        flat
-                        bordered
-                        :rows="props.pesquisadores"
-                        :columns="columns"
-                        :filter="filter"
-                        row-key="name"
-                        selection="multiple"
-                        v-model:selected="selected"
-                        no-data-label="Sem dados cadastrados"
-                        no-results-label="A sua pesquisa não retornou dados"
-                    >
-                        <template v-slot:top-left>
-                            <button @click="openModalAction(1)" class="tw-flex tw-items-center tw-justify-center tw-bg-primary tw-px-3 tw-py-2 tw-rounded-md tw-text-white">
-                                <span class="tw-mr-1">Adicionar</span>
-                                <Icon icon="material-symbols:add-circle" />
-                            </button>
-                        </template>
+        <Head title="Instituições" />
+        <div class="tw-p-5 md:tw-p-10">
+            <div class="tw-flex tw-items-center tw-justify-between tw-space-x-4">
+                <h1 class="tw-text-2xl tw-font-bold tw-text-careful-blue-80">Instituições</h1>
+                <PrimaryButton
+                    @click="openModalAction(1)"
+                    background="positive"
+                    class="tw-px-4 tw-py-2"
+                    text="Adicionar Instituição"
+                    icon="material-symbols:add-circle-outline"
+                />
+            </div>
+            <div class="tw-mt-4">
+                <q-table
+                    virtual-scroll
+                    :rows="rows"
+                    :columns="columns"
+                    row-key="id"
+                    :pagination="initialPagination"
+                    rows-per-page-label="Registros por página"
+                    no-data-label="Sem dados cadastrados"
+                    no-results-label="A sua pesquisa não retornou dados"
+                >
 
-                        <template v-slot:top-right>
-                            <q-input borderless dense v-model="filter" placeholder="Pesquisar" class="tw-border tw-border-gray-400 tw-rounded-md tw-px-2">
-                                <template v-slot:append>
-                                    <q-icon name="search" />
-                                </template>
-                            </q-input>
-                        </template>
-
-                        <template v-slot:body-cell="props">
-                            <q-td :props="props">
-                                <div v-if="props.col.name == 'data_nascimento'">
-                                    {{ props.row.data_nascimento ? props.row.data_nascimento.split('-').reverse().join('/') : '' }}
-                                </div>
-                                <div v-else-if="props.col.name == 'instituicao_id'">
-                                    {{ props.row.instituicao.nome_fantasia }}
-                                </div>
-                                <div v-else-if="props.col.name == 'actions'">
-                                    <div class="tw-inline-flex tw-items-center tw-rounded-md tw-shadow-sm">
-                                        <button @click="openModalAction(2, props.row)" class="tw-text-slate-800 hover:tw-text-green-500 tw-text-sm tw-bg-white hover:tw-bg-slate-100 tw-border tw-border-slate-200 tw-rounded-l-lg tw-font-medium tw-px-4 tw-py-2 tw-inline-flex tw-space-x-1 tw-items-center">
-                                            <Icon icon="tabler:edit" />
-                                        </button>
-                                        <button @click="openModalDetailsAction(props.row)" class="tw-text-slate-800 hover:tw-text-cyan-500 tw-text-sm tw-bg-white hover:tw-bg-slate-100 tw-border tw-border-slate-200 tw-font-medium tw-px-4 tw-py-2 tw-inline-flex tw-space-x-1 tw-items-center">
-                                            <Icon icon="ic:round-remove-red-eye" />
-                                        </button>
-                                        <button @click="openModalDeleteAction(props.row)" class="tw-text-slate-800 hover:tw-text-red-500 tw-text-sm tw-bg-white hover:tw-bg-slate-100 tw-border tw-border-slate-200 tw-rounded-r-lg tw-font-medium tw-px-4 tw-py-2 tw-inline-flex tw-space-x-1 tw-items-center">
-                                            <Icon icon="uil:trash" />
-                                        </button>
-                                    </div>
-                                </div>
-                                <div v-else>{{ props.value }}</div>
-                            </q-td>
-                        </template>
-
-                        <template v-slot:no-data="{ icon, message, filter }">
-                            <div class="tw-w-full tw-flex tw-justify-center tw-items-center">
-                                <span>
-                                    {{ message }}
-                                </span>
-                                <q-icon size="2em" name="sentiment_dissatisfied" />
+                    <template v-slot:body-cell="props">
+                        <q-td :props="props">
+                            <div v-if="props.col.name == 'data_nascimento'">
+                                {{ props.row.data_nascimento ? props.row.data_nascimento.split('-').reverse().join('/') : '' }}
                             </div>
-                        </template>
-                    </q-table>
-                </div>
+                            <div v-else-if="props.col.name == 'instituicao_id'">
+                                {{ props.row.instituicao.nome_fantasia }}
+                            </div>
+                            <div v-else-if="props.col.name == 'actions'">
+                                <div class="tw-inline-flex tw-items-center tw-rounded-md tw-shadow-sm tw-gap-2">
+                                    <PrimaryButton
+                                        @click="openModalAction(2, props.row)"
+                                        background="info"
+                                        class="tw-p-2"
+                                        icon="ant-design:edit-outlined"
+                                    >
+                                        <q-tooltip :offset="[10, 10]">
+                                            Editar
+                                        </q-tooltip>
+                                    </PrimaryButton>
+                                    <PrimaryButton
+                                        @click="openModalAction(3, props.row)"
+                                        background="warning"
+                                        class="tw-p-2"
+                                        icon="mdi:eye-outline"
+                                    >
+                                        <q-tooltip :offset="[10, 10]">
+                                            Detalhes
+                                        </q-tooltip>
+                                    </PrimaryButton>
+                                    <PrimaryButton
+                                        @click="openModalAction(4, props.row)"
+                                        background="negative"
+                                        class="tw-p-2"
+                                        icon="uil:trash"
+                                    >
+                                        <q-tooltip :offset="[10, 10]">
+                                            Excluir
+                                        </q-tooltip>
+                                    </PrimaryButton>
+                                </div>
+                            </div>
+                            <div v-else>
+                                {{ props.value }}
+                            </div>
+                        </q-td>
+                    </template>
+
+                    <template v-slot:top-right>
+                        <q-input v-model="filter" @update:model-value="val => filtrarTabela(val, ['id', 'nome_fantasia', 'cnpj', 'tipo'], props.instituicoes)" outlined type="search" placeholder="Pesquisar">
+                            <template v-slot:append>
+                                <q-icon name="search" />
+                            </template>
+                        </q-input>
+                    </template>
+
+                    <template v-slot:no-data="{ icon, message, filter }">
+                        <div class="tw-w-full tw-flex tw-justify-center tw-items-center">
+                            <span>
+                                {{ message }}
+                            </span>
+                            <q-icon size="2em" name="sentiment_dissatisfied" />
+                        </div>
+                    </template>
+                </q-table>
             </div>
 
             <q-dialog
@@ -72,12 +96,11 @@
             >
                 <q-card style="width: 700px; max-width: 80vw;">
                     <q-card-section>
-                        <div class="text-h6" v-if="typeModal == 1">Adicionar pesquisador</div>
-                        <div class="text-h6" v-if="typeModal == 2">Editar pesquisador</div>
+                        <div class="text-h6">{{ typeAction == 1 ? "Adicionar" : "Editar" }} Pesquisador</div>
                     </q-card-section>
 
                     <q-card-section>
-                        <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-4">
+                        <div v-if="!form.processing" class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-4">
                             <div>
                                 <InputLabel
                                     value="Nome"
@@ -166,21 +189,45 @@
                                 />
                             </div>
                         </div>
-                        <div class="tw-mt-5 tw-flex">
-                            <button v-if="typeModal == 1" @click="storePesquisador()" class="tw-mr-5 tw-flex tw-items-center tw-justify-center tw-bg-primary tw-px-3 tw-py-2 tw-rounded-md tw-text-white">
-                                <span class="tw-mr-1">Cadastrar</span>
-                                <Icon icon="material-symbols:add-circle" />
-                            </button>
-                            <button v-if="typeModal == 2" @click="savePesquisador()" class="tw-mr-5 tw-flex tw-items-center tw-justify-center tw-bg-primary tw-px-3 tw-py-2 tw-rounded-md tw-text-white">
-                                <span class="tw-mr-1">Salvar</span>
-                                <Icon icon="ic:baseline-save" />
-                            </button>
-                            <button v-close-popup class="tw-flex tw-items-center tw-justify-center tw-bg-red-500 tw-px-3 tw-py-2 tw-rounded-md tw-text-white">
-                                <span class="tw-mr-1">Cancelar</span>
-                                <Icon icon="material-symbols:cancel-outline" />
-                            </button>
+                        <div v-else>
+                            <div class="tw-flex tw-items-center tw-justify-center tw-py-2">
+                                <q-spinner
+                                    color="primary"
+                                    size="3em"
+                                />
+                            </div>
                         </div>
                     </q-card-section>
+
+                    <q-card-actions align="left" class="tw-space-x-4">
+
+                        <PrimaryButton
+                            @click="storeData()"
+                            v-if="typeAction == 1"
+                            :disabled="form.processing"
+                            background="positive"
+                            class="tw-px-4 tw-py-2"
+                            text="Cadastrar"
+                            icon="material-symbols:add-circle-outline"
+                        />
+                        <PrimaryButton
+                            @click="saveData()"
+                            v-if="typeAction == 2"
+                            :disabled="form.processing"
+                            background="positive"
+                            class="tw-px-4 tw-py-2"
+                            text="Salvar"
+                            icon="material-symbols:save-outline"
+                        />
+                        <PrimaryButton
+                            v-close-popup
+                            :disabled="form.processing"
+                            background="info"
+                            class="tw-px-4 tw-py-2"
+                            text="Cancelar"
+                            icon="material-symbols:cancel-outline"
+                        />
+                    </q-card-actions>
                 </q-card>
             </q-dialog>
 
@@ -189,71 +236,74 @@
             >
                 <q-card style="width: 700px; max-width: 80vw;">
                     <q-card-section>
-                        <div class="text-h6">Detalhes pesquisador</div>
+                        <div class="text-h6">Detalhes da Pesquisador</div>
                     </q-card-section>
 
                     <q-card-section>
-                        <div>
-                            <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-4">
-                                <div>
-                                    <InputLabel
-                                        value="Nome"
-                                    />
-                                    <span class="tw-text-lg">{{ form.nome }}</span>
-                                </div>
+                        <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-4">
+                            <div>
+                                <InputLabel
+                                    value="Nome"
+                                />
+                                <span class="tw-text-lg">{{ form.nome }}</span>
+                            </div>
 
-                                <div>
-                                    <InputLabel
-                                        value="Data de nascimento"
-                                    />
-                                    <span class="tw-text-lg">{{ form.data_nascimento ? form.data_nascimento.split('-').reverse().join('/') : '' }}</span>
-                                </div>
+                            <div>
+                                <InputLabel
+                                    value="Data de nascimento"
+                                />
+                                <span class="tw-text-lg">{{ form.data_nascimento ? form.data_nascimento.split('-').reverse().join('/') : '' }}</span>
+                            </div>
 
-                                <div>
-                                    <InputLabel
-                                        value="Sexo"
-                                    />
-                                    <span class="tw-text-lg">{{ form.sexo }}</span>
-                                </div>
+                            <div>
+                                <InputLabel
+                                    value="Sexo"
+                                />
+                                <span class="tw-text-lg">{{ form.sexo }}</span>
+                            </div>
 
-                                <div>
-                                    <InputLabel
-                                        value="CPF"
-                                    />
-                                    <span class="tw-text-lg">{{ form.cpf }}</span>
-                                </div>
+                            <div>
+                                <InputLabel
+                                    value="CPF"
+                                />
+                                <span class="tw-text-lg">{{ form.cpf }}</span>
+                            </div>
 
-                                <div>
-                                    <InputLabel
-                                        value="Universidade"
-                                    />
-                                    <span class="tw-text-lg">{{ form.universidade }}</span>
-                                </div>
+                            <div>
+                                <InputLabel
+                                    value="Universidade"
+                                />
+                                <span class="tw-text-lg">{{ form.universidade }}</span>
+                            </div>
 
-                                <div>
-                                    <InputLabel
-                                        value="Instituição"
-                                    />
-                                    <span class="tw-text-lg">{{ form.instituicao_id }}</span>
-                                </div>
+                            <div>
+                                <InputLabel
+                                    value="Instituição"
+                                />
+                                <span class="tw-text-lg">{{ form.instituicao_id }}</span>
+                            </div>
 
-                                <div class="tw-mt-5" v-if="form.obras.length > 0">
-                                    <span class="tw-text-xl">Obras</span>
-                                    <q-list bordered separator class="tw-mt-3">
-                                        <q-item v-for="(obra, index) in form.obras">
-                                            <q-item-section>{{ index + 1 }} - {{ obra.titulo }}</q-item-section>
-                                        </q-item>
-                                    </q-list>
-                                </div>
+                            <div class="tw-mt-5" v-if="form.obras.length > 0">
+                                <span class="tw-text-xl">Obras</span>
+                                <q-list bordered separator class="tw-mt-3">
+                                    <q-item v-for="(obra, index) in form.obras" :key="index">
+                                        <q-item-section>{{ index + 1 }} - {{ obra.titulo }}</q-item-section>
+                                    </q-item>
+                                </q-list>
                             </div>
                         </div>
-                        <div class="tw-mt-5 tw-flex">
-                            <button v-close-popup class="tw-flex tw-items-center tw-justify-center tw-bg-red-500 tw-px-3 tw-py-2 tw-rounded-md tw-text-white">
-                                <span class="tw-mr-1">Fechar</span>
-                                <Icon icon="material-symbols:cancel-outline" />
-                            </button>
-                        </div>
                     </q-card-section>
+
+                    <q-card-actions align="left" class="tw-space-x-4">
+                        <PrimaryButton
+                            v-close-popup
+                            :disabled="form.processing"
+                            background="info"
+                            class="tw-px-4 tw-py-2"
+                            text="Fechar"
+                            icon="material-symbols:cancel-outline"
+                        />
+                    </q-card-actions>
                 </q-card>
             </q-dialog>
 
@@ -262,24 +312,42 @@
             >
                 <q-card style="width: 700px; max-width: 80vw;">
                     <q-card-section>
-                        <div class="text-h6">Excluir pesquisador</div>
+                        <div class="text-h6">Deletar dados</div>
                     </q-card-section>
 
-                    <q-card-section>
-                        <div>
-                            Você tem certeza que deseja deletar esse registro?
+                    <q-card-section class="q-pt-none">
+                        <div v-if="!form.processing" class="tw-flex tw-py-2">
+                            Você tem certeza que deseja deletar esses dados?
                         </div>
-                        <div class="tw-mt-5 tw-flex">
-                            <button @click="destroyPesquisador()" class="tw-mr-5 tw-flex tw-items-center tw-justify-center tw-bg-red-500 tw-px-3 tw-py-2 tw-rounded-md tw-text-white">
-                                <span class="tw-mr-1">Excluir</span>
-                                <Icon icon="uil:trash" />
-                            </button>
-                            <button v-close-popup class="tw-flex tw-items-center tw-justify-center tw-bg-cyan-500 tw-px-3 tw-py-2 tw-rounded-md tw-text-white">
-                                <span class="tw-mr-1">Cancelar</span>
-                                <Icon icon="material-symbols:cancel-outline" />
-                            </button>
+
+                        <div v-if="form.processing" class="tw-flex tw-items-center tw-justify-center tw-py-2">
+                            <q-spinner
+                                color="primary"
+                                size="3em"
+                            />
                         </div>
                     </q-card-section>
+
+                    <q-card-actions align="left" class="tw-space-x-4">
+                        <PrimaryButton
+                            @click="destroyData()"
+                            :disabled="form.processing"
+                            background="negative"
+                            class="tw-px-4 tw-py-2"
+                            text="Excluir"
+                            icon="uil:trash"
+
+                        />
+
+                        <PrimaryButton
+                            :disabled="form.processing"
+                            background="info"
+                            class="tw-px-4 tw-py-2"
+                            text="Cancelar"
+                            icon="material-symbols:cancel-outline"
+                            v-close-popup
+                        />
+                    </q-card-actions>
                 </q-card>
             </q-dialog>
         </div>
@@ -288,30 +356,36 @@
 
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import PrimaryButton from '@/Components/PrimaryButton.vue';
 import InputLabel from '@/Components/InputLabel.vue';
-import { Icon } from '@iconify/vue';
 import { ref, onMounted } from 'vue';
-import { useForm } from '@inertiajs/vue3';
-import { Notify } from 'quasar'
+import { Head, useForm } from '@inertiajs/vue3';
+import { Notify } from 'quasar';
 
 const props = defineProps({
     pesquisadores: {
         type: Array,
-        default: ''
+        default: []
     },
     instituicoes: {
         type: Array,
-        default: ''
+        default: []
     }
-});
+})
 
 const columns = [
-  { name: 'nome', align: 'center', label: 'Nome', field: 'nome', sortable: true },
-  { name: 'data_nascimento', align: 'center', label: 'Data de nascimento', field: 'data_nascimento', sortable: true },
-  { name: 'universidade', align: 'center', label: 'Universidade', field: 'universidade', sortable: true },
-  { name: 'instituicao_id', align: 'center', label: 'Instituição', field: 'instituicao_id', sortable: true },
-  { name: 'actions', align: 'center', label: 'Ações', field: 'actions', sortable: true },
-]
+    { name: 'nome', align: 'center', label: 'Nome', field: 'nome', sortable: true },
+    { name: 'data_nascimento', align: 'center', label: 'Data de nascimento', field: 'data_nascimento', sortable: true },
+    { name: 'universidade', align: 'center', label: 'Universidade', field: 'universidade', sortable: true },
+    { name: 'instituicao_id', align: 'center', label: 'Instituição', field: 'instituicao_id', sortable: true },
+    { name: 'actions', align: 'center', label: 'Ações', field: 'actions', sortable: false },
+];
+const initialPagination = ref({
+    sortBy: 'desc',
+    descending: false,
+    page: 1,
+    rowsPerPage: 10
+});
 const form = useForm({
     id: '',
     nome: '',
@@ -322,118 +396,138 @@ const form = useForm({
     instituicao_id: '',
     obras: [],
 });
+
+const rows = ref(props.pesquisadores);
 const filter = ref('');
-const selected = ref([]);
 const openModal = ref(false);
 const openModalDetails = ref(false);
 const openModalDelete = ref(false);
 const optionsInstituicoes = ref([]);
-const typeModal = ref(1);
+const typeAction = ref('');
 
 onMounted(() => {
-    optionsInstituicoes.value = props.instituicoes.map((item) => {
-        return {
+    props.instituicoes.forEach((item) => {
+        optionsInstituicoes.value.push({
             label: item.nome_fantasia,
             value: item.id
-        }
+        });
     });
 })
 
-function openModalAction(type, data = []){
-    openModal.value = true;
-    if(type == 1){
-        typeModal.value = 1;
-        form.reset();
-    }else{
-        if(data){
-            typeModal.value = 2;
-            form.id = data.id;
-            form.nome = data.nome;
-            form.data_nascimento = data.data_nascimento;
-            form.sexo = data.sexo;
-            form.cpf = data.cpf;
-            form.universidade = data.universidade;
-            if(data.instituicao && typeof data.instituicao === 'object') {
-                form.instituicao_id = {
-                    label: data.instituicao.nome_fantasia,
-                    value: data.instituicao.id
-                };
-            } else {
-                form.instituicao_id = null;
-            }
 
+function openModalAction(type, data = []){
+    form.reset();
+    typeAction.value = type;
+    if(type == 1){
+        form.reset();
+        openModal.value = true;
+    }else if(type == 2){
+        form.id = data.id;
+        form.nome = data.nome;
+        form.data_nascimento = data.data_nascimento;
+        form.sexo = data.sexo;
+        form.cpf = data.cpf;
+        form.universidade = data.universidade;
+        if(data.instituicao && typeof data.instituicao === 'object') {
+            form.instituicao_id = {
+                label: data.instituicao.nome_fantasia,
+                value: data.instituicao.id
+            };
+        } else {
+            form.instituicao_id = null;
         }
+        openModal.value = true;
+    }else if(type == 3){
+        form.id = data.id;
+        form.nome = data.nome;
+        form.data_nascimento = data.data_nascimento;
+        form.sexo = data.sexo;
+        form.cpf = data.cpf;
+        form.universidade = data.universidade;
+        if(data.instituicao && typeof data.instituicao === 'object') {
+            form.instituicao_id = {
+                label: data.instituicao.nome_fantasia,
+                value: data.instituicao.id
+            };
+        } else {
+            form.instituicao_id = null;
+        }
+        openModalDetails.value = true;
+    }else if(type == 4){
+        form.id = data.id;
+        openModalDelete.value = true;
     }
 }
-function openModalDetailsAction(data){
-    openModalDetails.value = true;
-    form.id = data.id;
-    form.nome = data.nome;
-    form.data_nascimento = data.data_nascimento;
-    form.sexo = data.sexo;
-    form.cpf = data.cpf;
-    form.universidade = data.universidade;
-    if(data.instituicao && typeof data.instituicao === 'object') {
-        form.instituicao_id = data.instituicao.nome_fantasia;
-    } else {
-        form.instituicao_id = null;
-    }
-    form.obras = data.obras;
-}
-function openModalDeleteAction(item){
-    openModalDelete.value = true;
-    form.id = item.id;
-}
-function storePesquisador(){
+
+function storeData(){
     form.post(route('pesquisador.store'), {
         preserveScroll: true,
-        onSuccess: () => {
+        onSuccess: (response) => {
             openModal.value = false;
             form.reset();
-            Notify.create({
-                type: 'positive',
-                message: 'Pesquisador cadastrado com sucesso!',
-                position: 'top-right'
-            });
-        },onError: (error) => {
-            Notify.create({
-                type: 'negative',
-                message: 'Erro ao adicionar pesquisador!',
-                position: 'top-right'
-            });
+            rows.value = response.props.pesquisadores;
+        }, onError: (error) => {
             console.log(error);
         }
     });
-
 }
-function savePesquisador(){
+
+function saveData(){
     form.patch(route('pesquisador.update', form.id), {
         preserveScroll: true,
-        onSuccess: () => {
+        onSuccess: (response) => {
             openModal.value = false;
             form.reset();
-            Notify.create({
-                type: 'positive',
-                message: 'Pesquisador atualizado com sucesso!',
-                position: 'top-right'
-            });
-        }, onError: () => {
-            openModal.value = true;
-            Notify.create({
-                type: 'negaitve',
-                message: 'Erro ao atualizar pesquisador!',
-                position: 'top-right'
-            });
-        },
-    });
-}
-function destroyPesquisador(){
-    form.delete(route('pesquisador.destroy', form.id), {
-        preserveScroll: true,
-        onSuccess: () => {
-            openModalDelete.value = false;
-            form.reset();
+            rows.value = response.props.pesquisadores;
         }
     });
+}
+
+function destroyData(){
+    form.delete(route('pesquisador.destroy', form.id), {
+        preserveScroll: true,
+        onSuccess: (response) => {
+            openModalDelete.value = false;
+            form.reset();
+            rows.value = response.props.pesquisadores;
+        }
+    });
+}
+
+function filtrarTabela(value = null, propriedades = [], dados = []) {
+    if (value == null || value == '') {
+        rows.value = dados;
+    } else {
+        rows.value = dados.filter((item) => {
+            for (let propriedade of propriedades) {
+                propriedade = propriedade.split('.');
+                let propriedadeValida = true;
+                let itemAtual = item;
+                for (let subPropriedade of propriedade) {
+                    if (itemAtual && itemAtual.hasOwnProperty(subPropriedade)) {
+                        itemAtual = itemAtual[subPropriedade];
+                    } else {
+                        propriedadeValida = false;
+                        break;
+                    }
+                }
+
+                if (propriedadeValida && itemAtual) {
+                    if(typeof itemAtual == 'string'){
+                        if(itemAtual.toLowerCase().indexOf(value.toLowerCase()) > -1){
+                            return true;
+                        }
+                    }else if(typeof itemAtual == 'number'){
+                        if(itemAtual == value){
+                            return true;
+                        }
+                    }else{
+                        return false;
+                    }
+                }
+            }
+            return false;
+        });
+    }
 }
 </script>
