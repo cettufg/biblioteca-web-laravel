@@ -8,6 +8,9 @@ Modelo laravel + vuejs3 padrão + jwt já configurado para utilização com quas
 - Quasar
 - Tailwind Css
 
+## Objetivos
+Você precisa implementar for definido no desafio: [`Clique aqui`](https://github.com/cettufg/desafios-cett/blob/main/fullstack.md)
+
 ## Clone
 
 ```bash
